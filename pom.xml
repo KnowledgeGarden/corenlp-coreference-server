@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <properties>
+                <stanford.core.nlp.version>4.5.4</stanford.core.nlp.version>
+                <org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
+                <stanford.core.nlp.models.version>${stanford.core.nlp.version}</stanford.core.nlp.models.version>
+                <stanford.nlp.parser.version>3.9.2</stanford.nlp.parser.version>
+                <com.google.guava.version>14.0.1</com.google.guava.version>
+                <io.lettuce.version>5.0.2.RELEASE</io.lettuce.version>
+                <this.artifact.id>cygnet-tq</this.artifact.id>
+                <this.group.id>in.soundararajan.${this.artifact.id}</this.group.id>
+            </properties>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.topicquests</groupId>
+    <artifactId>corenlp-coreference-server</artifactId>
+    <version>0.1.0</version>
+      <dependencies>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>${stanford.core.nlp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>${stanford.core.nlp.models.version}</version>
+            <classifier>models</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-parser</artifactId>
+            <version>${stanford.nlp.parser.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+     <dependency>
+      <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>19.0</version>
+      </dependency>
+
+        <dependency>
+  <groupId>io.lettuce</groupId>
+  <artifactId>lettuce-core</artifactId>
+  <version>${io.lettuce.version}</version>
+</dependency>
+
+	<dependency>
+            <groupId>org.topicquests</groupId>
+            <artifactId>tq-support</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+		  		<archive>
+		    		<manifest>
+		      		<mainClass>org.topicquests.corenlp.CorefHttpServer</mainClass>
+		    		</manifest>
+		  		</archive>
+		  		<descriptorRefs>
+		    		<descriptorRef>jar-with-dependencies</descriptorRef>
+		  		</descriptorRefs>
+				</configuration>
+				<executions>
+		  		<execution>
+		    	<id>make-assembly</id> 
+		    	<phase>package</phase> 
+		    	<goals>
+		      	<goal>single</goal>
+		    	</goals>
+		  		</execution>
+				</executions>
+	      </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>
