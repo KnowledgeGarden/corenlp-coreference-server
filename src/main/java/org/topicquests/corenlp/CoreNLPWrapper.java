@@ -1,4 +1,5 @@
 package org.topicquests.corenlp;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
 
@@ -27,6 +28,7 @@ import edu.stanford.nlp.util.logging.RedwoodConfiguration;
 public class CoreNLPWrapper
 {
     private StanfordCoreNLP pipeline;
+    private StanfordCoreNLP sentpipe;
     public static final String
 		CHAIN_ID_KEY		= "chainId",
 		CARGO_KEY			= "cargo",
@@ -35,10 +37,15 @@ public class CoreNLPWrapper
     
     public CoreNLPWrapper() {
     	Properties props = new Properties();
-	    props.setProperty("annotators", "tokenize,pos,lemma,ner,parse,coref, kbp");
+	    props.setProperty("annotators", "tokenize,pos,lemma,ner,parse,coref, kbp");//, tokenize
 	    props.setProperty("coref.algorithm", "neural");
 	    pipeline = new StanfordCoreNLP(props, false);
-    }
+	    props = new Properties();
+	    // set the list of annotators to run
+	    props.setProperty("annotators", "tokenize");
+	    // build pipeline
+	    sentpipe = new StanfordCoreNLP(props);
+   }
 
 
     public JsonObject findCoreferences(String paragraph) {
@@ -56,8 +63,10 @@ public class CoreNLPWrapper
 		for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
 			//jo = new JsonObject();
 			jc =parseChain(cc.toString());
+			System.out.println("CoReFs");
 			corefs.add(jc);
 		}
+		System.out.println("mentions");
 		//mentions
 		JsonArray mentions = new JsonArray();
 		result.add("mentions", mentions);
@@ -69,6 +78,19 @@ public class CoreNLPWrapper
 		        ms.add(m.toString());
 		      }
 		}
+		// sentences
+		CoreDocument doc = new CoreDocument(paragraph);
+		sentpipe.annotate(doc);
+		System.out.println("Sentences");
+		JsonArray sentences = new JsonArray();
+		result.add("sentences", sentences);
+		for (CoreSentence sent : doc.sentences()) {
+			System.out.println("Sent "+sent);
+
+			sentences.add(sent.text());
+		}
+		System.out.println("Sentences2\n"+sentences);
+
 		return result;
 	}
     
@@ -94,23 +116,41 @@ public class CoreNLPWrapper
  		for (int i=0;i<len;i++) {
  			jo = new JsonObject();
  			x = chunks[i].trim();
- 			ptx = x.indexOf("in sentence");
+ 	 		System.out.println("PARSING-1 "+x);
+			ptx = x.indexOf("in sentence");
  			ch = x.substring(0, ptx).trim();
  			if (ch.startsWith("["))
  				ch = ch.substring(1);
+ 			if (ch.endsWith("]"))
+ 				ch = ch.substring(0, (ch.length()-1));
+ 			ch = ch.replace("\\\"", "\"");
  			ptx += "in sentence".length();
- 			sent = x.substring(ptx).trim();
+ 	 		System.out.println("PARSING-2 "+ptx);
+			sent = x.substring(ptx).trim();
+			if (sent.endsWith("]"))
+				sent = sent.substring(0, (sent.length()-1));
  			jo.addProperty(CHAIN_KEY, ch);
  			jo.addProperty(SENTENCE_ID_KEY, sent);
  			cargo.add(jo);
+ 	 		System.out.println("PARSING-3 "+cargo);
  		}
  		return result;
  	}
     
     
-    public CoreNLPHttpResponse response(String paragraph)
+    public CoreNLPHttpResponse response(String text)
     {
     	
+    	String paragraph = text.substring("searchText=".length()).trim();
+    	System.out.println("X "+paragraph);
+    	try {
+    		paragraph = URLDecoder.decode(paragraph, "UTF-8");
+    	} catch(Exception e) {
+    		throw new RuntimeException(e);
+    	}
+
+    	System.out.println("Y "+paragraph);
+
         JsonObject cargo = findCoreferences(paragraph);
 
         return CoreNLPHttpResponse.NEW

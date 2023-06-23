@@ -43,5 +43,37 @@ public class ParagraphTest {
 
 }
 /**
- * {"corefs":[{"chainId":"CHAIN32","cargo":[{"chain":"\"model + organism +\"","sentence":"3"},{"chain":"\"its\"","sentence":"3]"}]}],"mentions":[["searchText = Saccharomyces + cerevisiae + var. + boulardii +","var. + boulardii +","+","the + most + significant + probiotic + yeast + species","most + significant + probiotic","+","significant + probiotic","probiotic","yeast + species"],["+ S. + cerevisiae + var. + boulardii +","var. + boulardii +","boulardii +","+ a + eukaryotic + organism + that + has + been","eukaryotic","organism + that + has + been","+","+","used + in + scientific + investigations + since + the + time + of + its + discovery + [ 2 ] .","in","scientific","investigations + since","+","the + time + of","its","discovery + [ 2 ] .","[ 2 ]"],["This + model + organism +","model + organism +","+ unique + importance +","+ importance +","+","of + its + alterable + and + flexible + genome","its","alterable","+ flexible + genome"]]}
+{
+	"corefs": [{
+		"chainId": "CHAIN8",
+		"cargo": [{
+			"chain": "\"Saccharomyces cerevisiae var. boulardii\"",
+			"sentence": "1"
+		}, {
+			"chain": "\"S. cerevisiae var. boulardii\"",
+			"sentence": "2"
+		}, {
+			"chain": "\"its\"",
+			"sentence": "2"
+		}]
+	}, {
+		"chainId": "CHAIN11",
+		"cargo": [{
+			"chain": "\"a eukaryotic organism that has been used in scientific investigations since the time of its discovery [ 2 ]\"",
+			"sentence": "2"
+		}, {
+			"chain": "\"This model organism\"",
+			"sentence": "3"
+		}, {
+			"chain": "\"its\"",
+			"sentence": "3"
+		}]
+	}],
+	"mentions": [
+		["Saccharomyces cerevisiae var. boulardii", "the most significant probiotic yeast species"],
+		["2", "S. cerevisiae var. boulardii", "a eukaryotic organism that has been used in scientific investigations since the time of its discovery [ 2 ]", "scientific investigations", "the time of its discovery", "its discovery", "its"],
+		["This model organism", "its alterable and flexible genome", "its"]
+	],
+	"sentences": ["Saccharomyces cerevisiae var. boulardii is the most significant probiotic yeast species.", "S. cerevisiae var. boulardii is a eukaryotic organism that has been used in scientific investigations since the time of its discovery [2].", "This model organism has unique importance because of its alterable and flexible genome."]
+}
  */
